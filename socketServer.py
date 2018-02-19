@@ -11,6 +11,7 @@ class Server:
         self.connected_clients = []
         self.loop = asyncio.get_event_loop()
         self.db = ControllerDB()
+        self.rooms = {}
 
     def run_server(self):
         start_server = websockets.serve(self.user_registration_handler, self.address, 8765)
@@ -32,13 +33,13 @@ class Server:
             if client.logged_in is not True:
                 #means you are not logged in
                 # response = "Welcome to Gaucho-Relay-Chat, please login with the command '/login [username] [password]' or if you dont have an account register with '/register [username] [password]'"
-                # await websocket.send(response)
+
                 message = await websocket.recv()
                 # parse to acknowledge commands
                 message = message.split(' ')
                 username = message[1]
                 password = message[2]
-                print(message)
+                # print(message)
                 if message[0] == '/register':
                     if self.db.username_not_used(username):
                         #username not used so we can register him/her
@@ -65,12 +66,46 @@ class Server:
                     await websocket.send(response)
 
             else:
-                #user is logged in so we can begin the session
+                # user is logged in so we can begin the session
+                # TODO: develop command parser either at client or server
                 message = await websocket.recv()
-                print(client.username + ": " + message)
-                for peer in self.connected_clients:
-                    print(peer.username)
-                    await peer.socket.send(message)
+                command = message.split(' ')
+
+                # now we check the first part of message to see what the command is
+                # first doing the channel creation
+
+                if command[0] == '/createChannel':
+                    #create channel
+                    self.rooms[command[1]] = []
+                    await websocket.send("You have just created the channel: " + command[1] + ". To join use /join [channel_name]")
+                elif command[0] == "/join":
+                    try:
+                        self.rooms[command[1]].append(client)
+                        if client.room == "General":
+                            self.connected_clients.remove(client)
+                        else:
+                            # TODO: Test this works
+                            self.rooms[client.room].remove(client)
+                        
+                        client.set_channel(command[1])
+                        await websocket.send("Welcome to the " + command[1] + " channel!")
+                    except KeyError:
+                        # The room does not exist
+                        await websocket.send("The room you are trying to join does not exist, create it with /createChannel [channel_name]")
+                else:
+                    print(client.username + ": " + message)
+                    if client.room == "General":
+                        for peer in self.connected_clients:
+                            print(peer.username)
+                            await peer.socket.send(client.username + ": " + message)
+                    else:
+                        for peer in self.rooms[client.room]:
+                            print(peer.username)
+                            await  peer.socket.send(client.username + ": " + message)
+
+
+
+
 
 
 

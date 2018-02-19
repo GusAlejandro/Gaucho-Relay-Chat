@@ -30,3 +30,4 @@ $(document).ready( function () {
     var x = document.getElementById("chat");
     x.style.display = 'none';
 });
+
