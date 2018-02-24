@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Gaucho Relay Chat</title>
+    <meta charset="UTF-8">
+    <title>Direct Message</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-    <script src="../static/js/peer.js"></script>
+    <script src="../static/js/direct_messaging.js"></script>
     <script src="http://cdn.peerjs.com/0.3/peer.min.js"></script>
 </head>
 <body>
-    <div id="serverField">
-        <input type="text" id="address">
-        <button onclick="connect_to()">Connect</button>
-    </div>
+    <h1>Private Messaging</h1>
+    <h1>{{ peerid }}</h1>
     <div id="chat">
         <ul id="messages"></ul>
         <input type="text" id="myMessage">
