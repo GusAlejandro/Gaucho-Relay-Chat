@@ -28,18 +28,18 @@ function connect_to() {
             //$("#messages").append('<li>'+message+'</li>');
             if (confirm(message)){
                 window.open("http://169.231.179.243:5000/direct_message/"+peer_id);
-                ws.send("/accept " + user);
+                ws.send("/accept " + user + " " + peer_id);
             }else{
                 //nothing for now
             }
         } else if (message[0] == "pm-acceptance") {
-            var peer = message[1];
+            var id_to_connect_to = message[1];
             message.splice(0,1);
             message.splice(0,1);
             message = message.join(" ");
             //$("#messages").append('<li>'+message+'</li>');
             alert(message);
-            window.open("http://169.231.179.243:5000/direct_message/"+peer);
+            window.open("http://169.231.179.243:5000/direct_message_origin/"+id_to_connect_to);
         }else {
 
             message = event.data;

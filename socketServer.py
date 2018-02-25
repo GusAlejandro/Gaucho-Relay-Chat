@@ -4,6 +4,7 @@ from Client import Client
 from controllerDB import ControllerDB
 import uuid
 # TODO: At some point refactor to send messages of type event class for better handling on server and client
+# TODO: Might need to reorganize who gets a randomized peer id, and who can just use a given
 
 
 class Server:
@@ -105,7 +106,6 @@ class Server:
                 elif command[0] == "/pm":
                     # initiates private message protocol
                     target_user = command[1]
-                    # TODO: implement the handshake process for direct messaging
                     peer_id = str(uuid.uuid4().int)
                     if client.room != 'General':
                         for peer in self.rooms[client.room]:
@@ -115,11 +115,12 @@ class Server:
                                 await peer.socket.send( "pm-request" + " " + peer_id + " " + client.username + " is trying to PRIVATE MESSAGE YOU. Click confirm to accept")
                 elif command[0] == "/accept":
                     target_user = command[1]
+                    id_to_connect_to = command[2]
                     peer_id = str(uuid.uuid4().int)
                     if client.room != 'General':
                         for peer in self.rooms[client.room]:
                             if peer.username == target_user:
-                                await peer.socket.send("pm-acceptance" + " " + peer_id + " " + client.username + " has accepted your request for direct message")
+                                await peer.socket.send("pm-acceptance" + " " + id_to_connect_to + " " + client.username + " has accepted your request for direct message")
                 else:
                     # relays message to everyone connected to a given room
                     print(client.username + ": " + message)

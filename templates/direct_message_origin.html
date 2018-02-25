@@ -5,16 +5,18 @@
     <title>Direct Message</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="http://cdn.peerjs.com/0.3/peer.min.js"></script>
-    <script src="../static/js/direct_messaging.js"></script>
+    <script src="../static/js/direct_messaging_origin.js"></script>
+
+
 </head>
 <body>
     <h1 id="notivalue">Private Messaging</h1>
-    <h1 id="peer-id">{{ peerid }}</h1>
+    <h1 id="peer_id_to_connect_to"> {{ id_to_connect_to }}</h1>
     <div id="chat">
         <ul id="messages"></ul>
         <input type="text" id="myMessage">
         <button id="sendButton">Send</button>
-
+        <button id="theSample">Connect</button>
     </div>
 </body>
 </html>
