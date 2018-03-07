@@ -1,10 +1,11 @@
 from pymongo import MongoClient
 
+# file that handles database interaction
 
 class ControllerDB:
 
     def __init__(self):
-        self.mongoClient = MongoClient('mongodb://gus:pass123@ds225608.mlab.com:25608/gaucho-relay-chat')
+        self.mongoClient = MongoClient('mongodb://xxx:xxx@ds225608.mlab.com:25608/gaucho-relay-chat')
         self.database = self.mongoClient['gaucho-relay-chat']
         self.users = self.database.users
         self.channels = self.database.channels

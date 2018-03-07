@@ -4,7 +4,6 @@ from Client import Client
 from controllerDB import ControllerDB
 import uuid
 # TODO: At some point refactor to send messages of type event class for better handling on server and client
-# TODO: Might need to reorganize who gets a randomized peer id, and who can just use a given
 
 
 class Server:
@@ -28,13 +27,13 @@ class Server:
             pass
 
     async def user_registration_handler(self, websocket, path):
+        # main command parser fore relay websocket server
         client = Client(websocket)
         response = "Welcome to Gaucho-Relay-Chat, please login with the command '/login [username] [password]' or if you dont have an account register with '/register [username] [password]'"
         await websocket.send(response)
         while True:
+            # loop that handles user login/registration/authentication
             if client.logged_in is not True:
-                #means you are not logged in
-                # response = "Welcome to Gaucho-Relay-Chat, please login with the command '/login [username] [password]' or if you dont have an account register with '/register [username] [password]'"
 
                 message = await websocket.recv()
                 # parse to acknowledge commands
@@ -70,7 +69,6 @@ class Server:
 
             else:
                 # user is logged in so we can begin the session
-                # TODO: develop command parser either at client or server
                 message = await websocket.recv()
                 command = message.split(' ')
 
@@ -87,7 +85,7 @@ class Server:
                         if client.room == "General":
                             self.connected_clients.remove(client)
                         else:
-                            # TODO: Test this works
+
                             self.rooms[client.room].remove(client)
 
                         client.set_channel(command[1])
@@ -134,22 +132,7 @@ class Server:
                             await  peer.socket.send(client.username + ": " + message)
 
 
-
-
-
-
-
-
-
-
-
-
-    async def parse(self):
-        for i in range(1):
-            await asyncio.sleep(5)
-
-
-server = Server('169.231.179.243')
+server = Server('169.231.178.10')
 server.run_server()
 
 

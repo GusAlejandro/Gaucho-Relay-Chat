@@ -1,8 +1,10 @@
+// extract code for peer_id
 var url = window.location.href;
+console.log(url);
 url = url.split('/');
 var peer_id = url.pop();
 
-
+//create PeerJS peer
 var peer = new Peer(peer_id, {key: 'mbfckg8hh5q257b9', config: {'iceServers': [
     { url: 'stun:stun.l.google.com:19302' }
   ]}});
@@ -14,57 +16,72 @@ peer.on('open', function (id) {
 
 peer.on('connection', connect);
 
-
+// logic to handle connection event
 function connect(c) {
     console.log("WE ARE IN");
+    // we can now show the file upload UI
+    $('#file-upload').show();
+
+    // called when messaged is received
     c.on('data', function (data) {
         console.log(data);
-        $("#messages").append('<li>'+data+'</li>');
+        if(data[0] == '/'){
+            data = data.replace('/','');
+            console.log("THIS HERE:" + data);
+            // send the get req for file
+           window.open('http://169.231.178.10:5000/get_file?file=' + data, '_blank');
+        }else{
+            $("#messages").append('<li style="color=#1d53e1;">'+data+'</li>');
+        }
     });
 
+    // logic for sending message
     $('#sendButton').on('click', function () {
         var msg =  $('#myMessage').val();
-        $("#messages").append('<li>'+msg+'</li>');
         c.send(msg);
+        msg = "You: " + msg;
+        $("#messages").append('<li>'+msg+'</li>');
         $('#myMessage').val('');
+
     });
+
+
+    // send file upload code for peer retrieval
+    $('#file-code').change(function () {
+        //send the data thats on the h1 tag rn
+        x = document.getElementById('file-code');
+        c.send('/' + x.innerText);
+    });
+
+
 };
 
 
 
 $(document).ready(function () {
 
+    //file upload logic
+      $('#sub').on('click', function () {
+        console.log("fasdfa");
+        var formData = new FormData($('#upload-file')[0]);
+        $.ajax({
+            type: 'POST',
+            url: '/upload',
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            async: false,
+            success: function (data) {
+                x = document.getElementById('file-code');
+                x.innerText = data['file-code'];
+                $('#file-code').change();
+                var form = document.getElementById('upload-file');
+                form.reset();
+            }
+        });
 
-
-
-
-    // $('#sendButton').on('click', function () {
-    //    var msg =  $('#myMessage').val();
-    //    c.send(msg);
-    // });
-
-
-    // var peer_id = $('#peer-id').text();
-    // var peer = new Peer(peer_id,{key: 'mbfckg8hh5q257b9'});
-    //
-    //
-    // peer.on('open', function (id) {
-    //     console.log("this is my id: " + id);
-    // });
-    //
-    // peer.on('connection', function (conn) {
-    //     // I dont think I need to do another conn.on('open')
-    //     console.log("PLACE PUT");
-    // });
-    //
-    //
-    // peer.on('close', function () {
-    //     console.log("iz close");
-    // });
-    //
-    //
-    // //});
-    //
+    });
 
 
 

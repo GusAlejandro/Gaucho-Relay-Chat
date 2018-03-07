@@ -1,5 +1,5 @@
 function connect_to() {
-    var servers = {"GRC":"ws:/169.231.179.243:8765"};
+    var servers = {"GRC":"ws:/169.231.178.10:8765"};
     var server_address = servers[$('#address').val()];
 
     var ws = new WebSocket(server_address);
@@ -11,12 +11,7 @@ function connect_to() {
     };
 
     ws.onmessage = function (event) {
-        // need to start handling different kinds of events before appending
-        // below is a list of event types
-        // private message request acceptance -> if accepted, should open up new window
-            // look for message[0] being pm-request, followed by peer_id, followed by the actual message
-        // private message request response -> should open up new window
-            // look for message[0] being pm-acceptance, followed by peer_id, followed by the actual message
+
         var message = event.data;
         message = message.split(" ");
         if (message[0] == "pm-request") {
@@ -25,9 +20,8 @@ function connect_to() {
             message.splice(0,1);
             var user = message[0];
             message = message.join(" ");
-            //$("#messages").append('<li>'+message+'</li>');
             if (confirm(message)){
-                window.open("http://169.231.179.243:5000/direct_message/"+peer_id);
+                window.open("http://169.231.178.10:5000/direct_message/"+peer_id);
                 ws.send("/accept " + user + " " + peer_id);
             }else{
                 //nothing for now
@@ -37,9 +31,8 @@ function connect_to() {
             message.splice(0,1);
             message.splice(0,1);
             message = message.join(" ");
-            //$("#messages").append('<li>'+message+'</li>');
             alert(message);
-            window.open("http://169.231.179.243:5000/direct_message_origin/"+id_to_connect_to);
+            window.open("http://169.231.178.10:5000/direct_message_origin/"+id_to_connect_to);
         }else {
 
             message = event.data;

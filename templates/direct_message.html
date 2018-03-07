@@ -16,5 +16,17 @@
         <button id="sendButton">Send</button>
 
     </div>
+    <div id="file-upload" style="display: none;">
+        <form id="upload-file" method="post" enctype="multipart/form-data" target="response-name" action="/upload">
+            <fieldset>
+                <input type="file" id="the_file" name="file">
+                <button id="sub">Submit</button>
+                <iframe name="response-name" style="display: none;"></iframe>
+            </fieldset>
+        </form>
+    </div>
+    <div id="code-file">
+        <h1 id="file-code"></h1>
+    </div>
 </body>
 </html>
