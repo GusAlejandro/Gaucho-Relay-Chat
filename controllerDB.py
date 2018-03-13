@@ -5,7 +5,7 @@ from pymongo import MongoClient
 class ControllerDB:
 
     def __init__(self):
-        self.mongoClient = MongoClient('mongodb://xxx:xxx@ds225608.mlab.com:25608/gaucho-relay-chat')
+        self.mongoClient = MongoClient('mongodb://xxx:xxxx@ds225608.mlab.com:25608/gaucho-relay-chat')
         self.database = self.mongoClient['gaucho-relay-chat']
         self.users = self.database.users
         self.channels = self.database.channels

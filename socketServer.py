@@ -14,6 +14,7 @@ class Server:
         self.loop = asyncio.get_event_loop()
         self.db = ControllerDB()
         self.rooms = {}
+        self.keys = {}
 
     def run_server(self):
         start_server = websockets.serve(self.user_registration_handler, self.address, 8765)
@@ -78,8 +79,10 @@ class Server:
                 if command[0] == '/createChannel':
                     # create channel
                     self.rooms[command[1]] = []
+                    # TODO: Generate key for room adn save it under the same name in the self.keys dictionary
                     await websocket.send("You have just created the channel: " + command[1] + ". To join use /join [channel_name]")
                 elif command[0] == "/join":
+                    # TODO: send the associated key to the client, client has to remove the old one
                     try:
                         self.rooms[command[1]].append(client)
                         if client.room == "General":
@@ -97,6 +100,7 @@ class Server:
                     # lists current online users of the current room
                     # TODO: users who disconnect are still in list, need way to catch their disconnect remove existence
                     if client.room != 'General':
+                        # TODO: change iteration to be on the room's users list
                         users = ""
                         for peer in self.rooms[client.room]:
                             users = users + " " + peer.username
