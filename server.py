@@ -53,6 +53,10 @@ def file_download():
     path = os.path.join(app.root_path, 'FILES')
     return send_from_directory(directory=path, filename=file_name)
 
+@app.route('/')
+def keys():
+    return render_template('set_keys.html')
+
 
 
 if __name__ == '__main__':
